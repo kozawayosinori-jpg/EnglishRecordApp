@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<body>
+  <h2>録音テスト</h2>
+  <button id="start">録音開始</button>
+  <button id="stop" disabled>停止</button>
+
+  <script>
+    let rec, chunks = [];
+
+    document.getElementById("start").onclick = async () => {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      rec = new MediaRecorder(stream);
+      chunks = [];
+
+      rec.ondataavailable = e => chunks.push(e.data);
+
+      rec.onstop = () => {
+        const blob = new Blob(chunks, { type: "audio/webm" });
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+          const base64 = reader.result.split(",")[1];
+
+          fetch("★ここにGASのWebアプリURL★", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ audio: base64 })
+          })
+          .then(r => r.text())
+          .then(t => alert("送信完了: " + t));
+        };
+
+        reader.readAsDataURL(blob);
+      };
+
+      rec.start();
+      document.getElementById("start").disabled = true;
+      document.getElementById("stop").disabled = false;
+    };
+
+    document.getElementById("stop").onclick = () => rec.stop();
+  </script>
+</body>
+</html>
