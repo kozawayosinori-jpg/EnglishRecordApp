@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="ja">
 <body>
-  <h2>録音テスト</h2>
+  <h2>録音テスト（APIキー方式）</h2>
+
   <button id="start">録音開始</button>
   <button id="stop" disabled>停止</button>
 
   <script>
+    // ★ ここに先生が決めた秘密のキーを入れる（例： "abc123xyz"）
+    const API_KEY = "abc123xyz";
+
+    // ★ ここに GAS Web アプリの /exec URL を貼る
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwe0vVSeaiwdU0hpR061KqknI1FoA2k2KMNf4ozMtDPRG2_-dzr4-KAOx__HskR8SA/exec";
+
     let rec, chunks = [];
 
     document.getElementById("start").onclick = async () => {
@@ -22,13 +29,18 @@
         reader.onloadend = () => {
           const base64 = reader.result.split(",")[1];
 
-          fetch("★ここにGASのWebアプリURL★", {
+          // ★ API キー付きで GAS に送信
+          fetch(GAS_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ audio: base64 })
+            body: JSON.stringify({
+              audio: base64,
+              key: API_KEY
+            })
           })
           .then(r => r.text())
-          .then(t => alert("送信完了: " + t));
+          .then(t => alert("送信完了: " + t))
+          .catch(err => alert("送信エラー: " + err));
         };
 
         reader.readAsDataURL(blob);
@@ -43,3 +55,4 @@
   </script>
 </body>
 </html>
+
