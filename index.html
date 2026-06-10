@@ -38,8 +38,8 @@
     key: API_KEY
   })
 })
-.then(r => r.json())
-.then(t => alert("送信完了: " + t.status))
+.then(r => r.text())
+.then(t => alert("送信完了: " + t))
 .catch(err => alert("送信エラー: " + err));
 
         };
