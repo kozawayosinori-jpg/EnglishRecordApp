@@ -38,9 +38,9 @@
               key: API_KEY
             })
           })
-          .then(r => r.text())
-          .then(t => alert("送信完了: " + t))
-          .catch(err => alert("送信エラー: " + err));
+           .then(r => r.json())
+　　　　　　.then(t => alert("送信完了: " + t.status))
+           .catch(err => alert("送信エラー: " + err));
         };
 
         reader.readAsDataURL(blob);
