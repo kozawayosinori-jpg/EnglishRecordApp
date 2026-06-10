@@ -1,50 +1,8 @@
-<!DOCTYPE html>
-<html lang="ja">
-<body>
-  <h2>録音テスト（APIキー方式）</h2>
-
-  <button id="start">録音開始</button>
-  <button id="stop" disabled>停止</button>
-
-  <script>
-    // ★ ここに先生が決めた秘密のキーを入れる（例： "abc123xyz"）
-    const API_KEY = "abc123xyz";
-
-    // ★ ここに GAS Web アプリの /exec URL を貼る
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbwhKK0GB3TiEo83rOAD3RM2KzRDtW1sefERwDSL1Q1q-eKFe0AQJHGXUKxPtGHb3_H_/exec";
-
-    let rec, chunks = [];
-
-    document.getElementById("start").onclick = async () => {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      rec = new MediaRecorder(stream);
-      chunks = [];
-
-      rec.ondataavailable = e => chunks.push(e.data);
-
-      rec.onstop = () => {
-        const blob = new Blob(chunks, { type: "audio/webm" });
-        const reader = new FileReader();
-
-        reader.onloadend = () => {
-          const base64 = reader.result.split(",")[1];
-
-          // ★ API キー付きで GAS に送信
-         
+        
 fetch(GAS_URL, { method: "POST", mode: "no-cors", 
                 headers: { "Content-Type": "text/plain" }, 
                 body: JSON.stringify({ test: "hello", key: API_KEY }) });
-        };
-
-        reader.readAsDataURL(blob);
-      };
-
-      rec.start();
-      document.getElementById("start").disabled = true;
-      document.getElementById("stop").disabled = false;
-    };
-
-    document.getElementById("stop").onclick = () => rec.stop();
+       
   </script>
 </body>
 </html>
