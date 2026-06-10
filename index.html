@@ -11,7 +11,7 @@
     const API_KEY = "abc123xyz";
 
     // ★ ここに GAS Web アプリの /exec URL を貼る
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzM07NqCjcX-4Iv6FxRI4-19GxiiN5k8Vc4LYIkJ7Ok5_T1gfGG6Q0vQd8ax77UiDMu/exec";
+    const GAS_URL = "";
 
     let rec, chunks = [];
 
@@ -20,7 +20,7 @@
       rec = new MediaRecorder(stream);
       chunks = [];
 
-      rec.ondataavailable = e => chunks.push(e.data);
+      rec.ondataavailable = e => chunks.push(e.data);https://script.google.com/macros/s/AKfycbw06sERtlW3jtebxfkLYJOjRuQ3K7SFbeVS78JiCwPKLKMtKMXuPMBVQV9XbUSb1zz4/exec
 
       rec.onstop = () => {
         const blob = new Blob(chunks, { type: "audio/webm" });
