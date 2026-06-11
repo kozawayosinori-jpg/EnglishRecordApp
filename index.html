@@ -30,6 +30,8 @@
           const base64 = reader.result.split(",")[1];
 
           // ★ API キー付きで GAS に送信
+console.log("base64 length =", base64.length);
+alert("base64 length = " + base64.length);
          fetch(GAS_URL, {
   method: "POST",
   mode: "no-cors",
