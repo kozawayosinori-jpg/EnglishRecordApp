@@ -30,17 +30,23 @@
           const base64 = reader.result.split(",")[1];
 
           // ★ API キー付きで GAS に送信
-          fetch(GAS_URL, {
+         fetch(GAS_URL, {
   method: "POST",
-  headers: { "Content-Type": "application/json" },
+  mode: "no-cors",
+  headers: {
+    "Content-Type": "text/plain"
+  },
   body: JSON.stringify({
     audio: base64,
     key: API_KEY
   })
 })
-.then(r => r.text())
-.then(t => alert("送信完了: " + t))
-.catch(err => alert("送信エラー: " + err));
+.then(() => {
+  alert("送信しました");
+})
+.catch(err => {
+  alert("送信エラー: " + err);
+});
 
         };
 
