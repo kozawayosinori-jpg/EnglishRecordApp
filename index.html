@@ -4,12 +4,15 @@
 
 <button onclick="sendTest()">送信</button>
 
+
 <script>
 
 const GAS_URL =
 "https://script.google.com/macros/s/AKfycbxODNJMeBDmXSR0S1oo-9LcYXQdQjvIUyeUGBxahnFN0GVDcHs9pa8XFjDnyqdeHtoN/exec";
 
 function sendTest(){
+
+  console.log("送信開始");
 
   fetch(GAS_URL,{
     method:"POST",
@@ -20,15 +23,19 @@ function sendTest(){
     body:JSON.stringify({
       test:"hello"
     })
+  })
+  .then(() => {
+    console.log("fetch完了");
+    alert("送信しました");
+  })
+  .catch(err => {
+    console.error("エラー", err);
   });
 
-  alert("送信しました");
 }
 
-</script>
+</script>     
 
 </body>
-</html>      
-
-
+</html>
 
