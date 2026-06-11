@@ -1,41 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <body>
+  <h2>録音テスト（APIキー方式）</h2>
 
-<button onclick="sendTest()">送信</button>
+  <button id="start">録音開始</button>
+  <button id="stop" disabled>停止</button>
 
+  <script>
+    // ★ ここに先生が決めた秘密のキーを入れる（例： "abc123xyz"）
+    const API_KEY = "abc123xyz";
 
-<script>
+    // ★ ここに GAS Web アプリの /exec URL を貼る
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwfpwkhaU4J2CA53JcfiSFORpnaKQVYdMvsRuMDz1Y-7yDnB9GRLFL2zCS-0AqOwQyi/exec";
 
-const GAS_URL =
-"https://script.google.com/macros/s/AKfycbxoDNqV-p2d0YXVO_udDgD1nFEgycJux4UcFCTIJlK7z1wdw9dI7fsYuKu5k06jphZM/exec";
+    let rec, chunks = [];
 
-function sendTest(){
+    document.getElementById("start").onclick = async () => {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      rec = new MediaRecorder(stream);
+      chunks = [];
 
-  console.log("送信開始");
+      rec.ondataavailable = e => chunks.push(e.data);
 
-  fetch(GAS_URL,{
-    method:"POST",
-    mode:"no-cors",
-    headers:{
-      "Content-Type":"text/plain"
-    },
-    body:JSON.stringify({
-      test:"hello"
-    })
+      rec.onstop = () => {
+        const blob = new Blob(chunks, { type: "audio/webm" });
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+          const base64 = reader.result.split(",")[1];
+
+          // ★ API キー付きで GAS に送信
+          fetch(GAS_URL, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    audio: base64,
+    key: API_KEY
   })
-  .then(() => {
-    console.log("fetch完了");
-    alert("送信しました");
-  })
-  .catch(err => {
-    console.error("エラー", err);
-  });
+})
+.then(r => r.text())
+.then(t => alert("送信完了: " + t))
+.catch(err => alert("送信エラー: " + err));
 
-}
+        };
 
-</script>     
+        reader.readAsDataURL(blob);
+      };
 
+      rec.start();
+      document.getElementById("start").disabled = true;
+      document.getElementById("stop").disabled = false;
+    };
+
+    document.getElementById("stop").onclick = () => rec.stop();
+  </script>
 </body>
 </html>
+
 
