@@ -1,10 +1,27 @@
-        
-fetch(GAS_URL, { method: "POST", mode: "no-cors", 
-                headers: { "Content-Type": "text/plain" }, 
-                body: JSON.stringify({ test: "hello", key: API_KEY }) });
-       
-  </script>
-</body>
-</html>
+<button onclick="sendTest()">送信</button>
+
+<script>
+
+const GAS_URL =
+"https://script.google.com/macros/s/AKfycbxODNJMeBDmXSR0S1oo-9LcYXQdQjvIUyeUGBxahnFN0GVDcHs9pa8XFjDnyqdeHtoN/exec";
+
+function sendTest(){
+
+  fetch(GAS_URL,{
+    method:"POST",
+    mode:"no-cors",
+    headers:{
+      "Content-Type":"text/plain"
+    },
+    body:JSON.stringify({
+      test:"hello"
+    })
+  });
+
+  alert("送信しました");
+}
+
+</script>        
+
 
 
